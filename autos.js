@@ -8,7 +8,7 @@ let autos = [
         precio:150000,
         cuotas:12,
         patente:"APL123",
-        vendido:true,
+        vendido:false,
     },
      {
         marca:"Toyota",

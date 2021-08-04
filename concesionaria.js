@@ -1,5 +1,10 @@
 const autos = require('./autos.js');
 
+let persona = {
+    nombre: "Juan",
+    capacidadDePagoEnCuotas: 20000,
+    capacidadDePagoTotal: 100000
+    };
 
 const concesionaria = {
     autos: autos,
@@ -26,69 +31,45 @@ const concesionaria = {
         let autos0Km = autosEnVenta.filter(elemento => elemento.km < 100);
         return autos0Km;
     },
-    listaDeVentas: function (patente) {
-        let listaDePrecios = [];
-        let autosYaVendidos = autos.filter(elemento => elemento.vendido == true);
-        for (let i = 0; i < autosYaVendidos.length; i++) {
-            let precioDeAuto = autosYaVendidos[i].precio;
-            listaDePrecios.push(precioDeAuto);
-        }
-        let autoVendido = this.venderAuto(patente);
-        listaDePrecios.push(autoVendido.precio);
+    listaDeVentas: function () {
+        let autosVentas = autos;
+        let arrDePrecios = [];
+        let autosYaVendidos = autosVentas.filter(elemento => elemento.vendido == true);//Devuelve Los Objetos de los autos vendidos.
 
-        return listaDePrecios;
-        
-        
+        autosYaVendidos.forEach(function (element) {
+            arrDePrecios.push(element.precio)
+        })
+        return arrDePrecios
+    },
+    totalDeVentas: function(){
+        let preciosVentas = this.listaDeVentas(concesionaria.autos);
+        if (preciosVentas == 0){
+            return 0;
+        }else{
+            let totalPrecioVentas = preciosVentas.reduce(function(acum,num){
+                return acum + num;
+            })
+            return totalPrecioVentas;
+        }
     }
 
-
-    /*Al llamar a la función listaDeVentas debe retornar una lista con los precios de las ventas, la lista original debe devolver una lista vacia
-Al vender al auto con patente 'JJK116' y luego llamar a la función listaDeVentas debe contener el precio del auto vendido */
-    
-
-/*listaDeVentas: function (patente) {
-        let listaDePrecios = [];
-        let autosYaVendidos = autos.filter(elemento => elemento.vendido == true);
-        for (let i = 0; i < autosYaVendidos.length; i++) {
-            let precioDeAuto = autosYaVendidos[i].precio;
-            listaDePrecios.push(precioDeAuto);
-        }
-        let autoVendido = this.venderAuto(patente);
-        listaDePrecios.push(autoVendido.precio);
-
-        return listaDePrecios;
-        
-        
-    }
-*/
-  
 }
-//console.log(concesionaria.venderAuto('APL123'));
-console.log(concesionaria.listaDeVentas('APL123'));
+
+concesionaria.venderAuto('APL123');
+
+console.log(concesionaria.totalDeVentas());
+//console.log(concesionaria.listaDeVentas(concesionaria.autos));
 
 
 
-
-
-
-
-    /*listaDeVenta: function () {
-        let autosVendidos = autos.filter(elemento => elemento.vendido == true);
-        let listaDePrecios = [];
-        for (let i = 0; i < autosVendidos.length; i++) {
-            let precioDeAuto = autosVendidos[i].precio;
-            listaDePrecios.push(precioDeAuto);
-        }
-        return listaDePrecios;
-    }*/
-
-
-
-
-
-  //asdhasidahs
-
-//console.log(concesionaria.buscarAuto('APL123'))
-//concesionaria.venderAuto('APL123');
-
-
+/*totalDeVentas: function(){
+    let preciosVentas = this.listaDeVentas(concesionaria.autos);
+    if (preciosVentas == []){
+        return 0;
+    }else{
+        let totalPrecioVentas = preciosVentas.reduce(function(acum,num){
+            return acum + num;
+        })
+        return totalPrecioVentas;
+    }
+}*/

@@ -1,10 +1,21 @@
 const autos = require('./autos.js');
 
-let persona = {
+let persona = [{
     nombre: "Juan",
     capacidadDePagoEnCuotas: 20000,
     capacidadDePagoTotal: 100000
-    };
+},
+{
+    nombre: "Pedro",
+    capacidadDePagoEnCuotas: 30000,
+    capacidadDePagoTotal: 100000000
+},
+{
+    nombre: "Mirta",
+    capacidadDePagoEnCuotas: 100,
+    capacidadDePagoTotal: 100000000
+},
+];
 
 const concesionaria = {
     autos: autos,
@@ -41,35 +52,55 @@ const concesionaria = {
         })
         return arrDePrecios
     },
-    totalDeVentas: function(){
+    totalDeVentas: function () {
         let preciosVentas = this.listaDeVentas(concesionaria.autos);
-        if (preciosVentas == 0){
+        if (preciosVentas == 0) {
             return 0;
-        }else{
-            let totalPrecioVentas = preciosVentas.reduce(function(acum,num){
+        } else {
+            let totalPrecioVentas = preciosVentas.reduce(function (acum, num) {
                 return acum + num;
             })
             return totalPrecioVentas;
         }
+    },
+    puedeComprar: function (auto, comprador) {
+        let autoBuscado = this.buscarAuto(auto); //devuelve el objeto Auto
+        let cliente = persona.filter(elemento => elemento.nombre == comprador);
+        cliente = cliente[0]; //devuelve el objeto de la persona
+        let unaCuota = autoBuscado.precio / autoBuscado.cuotas;
+        if (cliente.capacidadDePagoEnCuotas >= unaCuota && cliente.capacidadDePagoTotal >= autoBuscado.precio) {
+            return true;
+
+        } else {
+            return false
+        }
+        //NO SE CUAL ES EL PROBLEMA DE ARRIBA
+
+    },
+    autosQuePuedeComprar: function (comprador) {
+        let autosALaVenta = this.autosParaLaVenta();//array con autos a la venta
+        let listaAutosPosiblesDeCompra = [];
+
+        for (let i = 0; i < autosALaVenta.length; i++) {
+            let autoIndividual = autosALaVenta;
+            let posibilidadDeCompra = this.puedeComprar(autosALaVenta[i].patente, comprador);
+            if (posibilidadDeCompra == true) {
+                listaAutosPosiblesDeCompra.push(autoIndividual[i]);
+            }else{
+                continue
+            }
+
+
+        }
+        return listaAutosPosiblesDeCompra;
+
     }
+    
 
 }
-
-concesionaria.venderAuto('APL123');
-
-console.log(concesionaria.totalDeVentas());
-//console.log(concesionaria.listaDeVentas(concesionaria.autos));
+console.log(concesionaria.autosQuePuedeComprar("Pedro"));
 
 
+//console.log(concesionaria.puedeComprar('APL123',"Pedro"));
+//console.log(concesionaria.puedeComprar('APL123', "Mirta"));
 
-/*totalDeVentas: function(){
-    let preciosVentas = this.listaDeVentas(concesionaria.autos);
-    if (preciosVentas == []){
-        return 0;
-    }else{
-        let totalPrecioVentas = preciosVentas.reduce(function(acum,num){
-            return acum + num;
-        })
-        return totalPrecioVentas;
-    }
-}*/
